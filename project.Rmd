@@ -1,0 +1,258 @@
+---
+title: "project"
+author: "YuWen"
+date: "5/7/2021"
+output: html_document
+---
+# Introduction
+Since depression has become a major issue in society nowadays, I am curious what kind of factors would lead to depression happen. Then this data set is National Health and Nutrition Examination Survey conducted by Center for Disease Control and Prevention. We only take the data from 2015 to 2016. 
+
+Based on the research, we first choose dependent variable as the degree of depression level(WTMEC2YR). This variable was weighted and calculated by participants' answer to nine-item depression screening instrument (also called the Patient Health Questionnaire (Kroenke and Spitzer, 2002; Kroenke et al., 2001). 
+
+Then we choose potential factors which could have relationship with depression, they are education level(DMDEDUC2), household income(INDHHIN2), gender(RIAGENDR), race(RIDRETH3), age(RIDAGEYR) of the participant. Among those independent variables, the qualitative variables are gender(RIAGENDR) and race(RIDRETH3), and the quantitative variables are education level(DMDEDUC2), household income(INDHHIN2) and age(RIDAGEYR). 
+
+More details as below:
+
+
+
+![Caption for the picture.](/Users/YuwenChiu/Desktop/USFAE/Econ620/ps/hw/hw/edu.JPG)
+
+![Caption for the picture.](/Users/YuwenChiu/Desktop/USFAE/Econ620/ps/hw/hw/income.JPG)
+
+![Caption for the picture.](/Users/YuwenChiu/Desktop/USFAE/Econ620/ps/hw/hw/gender.JPG)
+
+![Caption for the picture.](/Users/YuwenChiu/Desktop/USFAE/Econ620/ps/hw/hw/race.JPG)
+
+
+
+
+information from:
+https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.htm#RIDAGEYR
+
+
+
+# DGP
+We import the data and choose the desired variables to create a data set. Meanwhile dealing with the missing values.
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+datap <- read_excel('DEMO_I.XLSX')
+subdata <- datap %>% select(WTMEC2YR, DMDEDUC2, INDHHIN2, RIAGENDR, RIDRETH3, RIDAGEYR)
+numdata <- as.data.frame(subdata)
+cleaned_data <- drop_na(numdata)
+ind <- which(cleaned_data$WTMEC2YR == 0.000)
+cleaned_data <- cleaned_data[-ind,]
+```
+
+
+This table shows the initially descriptive statistics.
+```{r}
+summary(numdata)
+```
+
+
+
+Below is the table which presents distribution of each independent variable.
+
+
+depression(WTMEC2YR)
+```{r}
+hist(datap$WTMEC2YR, breaks=30)
+
+```
+
+education level(DMDEDUC2), household income(INDHHIN2), gender(RIAGENDR), race(RIDRETH3)
+```{r}
+plotedu <- ggplot(cleaned_data, aes(x = DMDEDUC2))+
+                    geom_bar(color="black", fill="steelblue", stat='bin',  binwidth=1)+
+                    xlim(0,10)
+plotinc <- ggplot(cleaned_data, aes(x = INDHHIN2))+
+  geom_bar(color="black", fill="lightblue", stat='bin',  binwidth=1)+
+  xlim(0,99)
+plotgen <- ggplot(cleaned_data, aes(x = RIAGENDR))+
+                    geom_bar(color="black", fill="lightblue", stat='bin', binwidth=0.5)+
+                    xlim(0,3)
+plotrace <- ggplot(cleaned_data, aes(x = RIDRETH3))+
+  geom_bar(color="black", fill="steelblue", stat='bin', binwidth=0.5)+
+  xlim(0,8)
+source("http://peterhaschke.com/Code/multiplot.R")
+multiplot(plotedu, plotinc, plotgen, plotrace, cols=2)
+```
+
+
+Below is the table which implies the relationship between each independent variable and depression.
+
+
+education level(DMDEDUC2), household income(INDHHIN2), gender(RIAGENDR), race(RIDRETH3)
+```{r}
+plotedu2 <- ggplot(cleaned_data, aes(x = DMDEDUC2, y=WTMEC2YR))+
+  geom_point(color="steelblue")+
+  xlim(0,10)
+plotinc2 <- ggplot(cleaned_data, aes(x = INDHHIN2, y=WTMEC2YR))+
+  geom_point(color="lightblue")+
+  xlim(0,99)
+plotgen2 <- ggplot(cleaned_data, aes(x = RIAGENDR, y=WTMEC2YR))+
+  geom_point(color="steelblue")+
+  xlim(0,3)
+plotrace2 <- ggplot(cleaned_data, aes(x = RIDRETH3, y=WTMEC2YR))+
+  geom_point(color="lightblue")+
+  xlim(0,8)
+source("http://peterhaschke.com/Code/multiplot.R")
+multiplot(plotedu2, plotinc2, plotgen2, plotrace2, cols=2)
+```
+
+age(RIDAGEYR)
+```{r}
+ggplot(cleaned_data, aes(x=RIDAGEYR, y=WTMEC2YR)) +
+  geom_point(col='darkred') +
+  geom_smooth(method="lm", se=F, col='lightgreen')
+```
+
+
+
+# Initial regression
+We first use adjusted R^2 to determine whether the variable should be included. That is, if adjusted R^2 is larger while adding a variable, it implies that variable has explanatory power. One thing needs to be noticed is that even though gender has decreased R^2 value, it is very little. Since gender has been demonstrated as an important factor in the papers I have read, I decide to keep this variable here. The follows are the procedures:
+```{r}
+regressionpro1 <- lm(WTMEC2YR ~ INDHHIN2, data=cleaned_data)
+summary(regressionpro1)
+regressionpro2 <- lm(WTMEC2YR ~ DMDEDUC2+INDHHIN2, data=cleaned_data)
+summary(regressionpro2)
+regressionpro3 <- lm(WTMEC2YR ~ DMDEDUC2+INDHHIN2+RIAGENDR, data=cleaned_data)
+summary(regressionpro3)
+regressionpro4 <- lm(WTMEC2YR ~ DMDEDUC2+INDHHIN2+RIAGENDR+RIDRETH3, data=cleaned_data)
+summary(regressionpro4)
+regressionpro <- lm(WTMEC2YR ~ DMDEDUC2+INDHHIN2+RIAGENDR+RIDRETH3+RIDAGEYR, data=cleaned_data)
+summary(regressionpro)
+```
+The estimates of the slope coefficients represent when one unit increase in independent variable, how many estimated value increase in dependent variable. 
+
+
+
+# Complete Regression Model
+There are two main directions here: determining the left/right hand side should use log or not.    
+
+left hand side(LHS)   
+We can determine if we should transform dependent variable by the distribution of residuals. 
+
+```{r}
+resid <- regressionpro$residuals
+hist(resid)
+regressionpro_log <- lm(log(WTMEC2YR) ~ DMDEDUC2+INDHHIN2+RIAGENDR+RIDRETH3+RIDAGEYR, data=cleaned_data)
+resid_log <- regressionpro_log$residuals
+hist(resid_log)
+```
+
+
+When we compare the two table, we can find the distribution of residuals with transformed model is more normal. Consequently, it would be better if we use log level model in LHS.
+
+right hand side(RHS)   
+Since we know that education level and household income are quantitative variables, we try to compare them with log and original model.
+
+```{r}
+regressionpro_le <- lm(log(WTMEC2YR) ~ log(DMDEDUC2)+INDHHIN2+RIAGENDR+RIDRETH3+RIDAGEYR, data=cleaned_data)
+summary(regressionpro_le)
+regressionpro_li <- lm(log(WTMEC2YR) ~ DMDEDUC2+log(INDHHIN2)+RIAGENDR+RIDRETH3+RIDAGEYR, data=cleaned_data)
+summary(regressionpro_li)
+regressionpro_ll <- lm(log(WTMEC2YR) ~ log(DMDEDUC2)+log(INDHHIN2)+RIAGENDR+RIDRETH3+RIDAGEYR, data=cleaned_data)
+summary(regressionpro_ll)
+```
+The outcome implies that when both of the two variables add to the model, the estimated values are improved and t-stat demonstrates they are statistical significantly now. Therefor, we should use log transformed model for the two variables. So, the final regression is log(WTMEC2YR) = log(DMDEDUC2) + log(INDHHIN2) + RIAGENDR+RIDRETH3+RIDAGEYR.
+
+
+Here, maybe just for fun, let us take a look for dummy variable. We already know that gender is intercept dummy variable but we are curious if it is also slope dummy. So, we make education level as interaction term to see the relationship between gender and depression would be affected by the relationship between gender and education level.
+```{r}
+cleaned_data$RIAGENDR[which(cleaned_data$RIAGENDR == '2' )] <- 0 
+cleaned_data$RIAGENDR_edu <- cleaned_data$RIAGENDR * cleaned_data$DMDEDUC2
+regressionpro_slopdum <- lm(log(WTMEC2YR) ~ log(DMDEDUC2)+log(INDHHIN2)+RIAGENDR+RIDRETH3+RIDAGEYR+RIAGENDR_edu, data=cleaned_data)
+summary(regressionpro_slopdum)
+
+fem_less <- 0.4176371-0.0125560
+fem_less
+```
+Then we know that there is slightly different between male and female in terms of education. The coefficient of male is 0.4176371, yet for female is 0.4050811. This tells us that gender is slope dummy with the education level as interaction term. 
+
+
+
+# Tests
+Since the slope coefficient for some variables in initial model is negative, we are not sure if that is caused by multicollinearity. So, we come up with hypothesis which is if gender and race are Jointly significant. Then follows are procedure:  
+𝐻0: 𝐵3 = 𝐵4 = 0, 𝐻1: 𝐵3 ≠ 0 and/or 𝐵4 ≠ 0.    
+Then use F-test. (Formula is as follows.) 
+![Caption for the picture.](/Users/YuwenChiu/Desktop/USFAE/Econ620/ps/hw/hw/p3.JPG)
+
+
+
+```{r}
+regressionpro <- lm(WTMEC2YR ~ DMDEDUC2+INDHHIN2+RIAGENDR+RIDRETH3+RIDAGEYR, data=cleaned_data)
+summary(regressionpro)
+regressionpro_r <- lm(WTMEC2YR ~ DMDEDUC2+INDHHIN2, data=cleaned_data)
+summary(regressionpro_r)
+anova(regressionpro)
+anova(regressionpro_r)
+f_stat <- ((7.5489e+12 - 7.4647e+12) / 2 ) / (7.4647e+12 / 4951)
+f_stat
+f_cri <- qf(p=0.01, df1=2, df2=4951, lower.tail=FALSE)
+f_cri
+```
+The f-stat is 27.92304 and f-critical is 4.609456. Obviously, f-stat is larger than f-critical, it rejects the null. That is,  RIDRETH3 and RIDAGEYR are Jointly significant.  
+
+
+Another hypothesis is to see if gender and age are jointly significant.   
+𝐻0: 𝐵3 = 𝐵5 = 0, 𝐻1: 𝐵3 ≠ 0 and/or 𝐵5 ≠ 0.   
+Yet, this time we use LM test. (Formula is LM = n*R-square)
+```{r}
+resid_a <- lm(WTMEC2YR ~ DMDEDUC2+INDHHIN2+RIDRETH3, data=cleaned_data)$residuals
+regressionpro_a <- lm(resid_a ~ DMDEDUC2+INDHHIN2+RIAGENDR+RIDRETH3+RIDAGEYR, data=cleaned_data)
+summary(regressionpro_a)
+LM_stat <- 4956*0.004011
+LM_stat
+```
+![Caption for the picture.](/Users/YuwenChiu/Desktop/USFAE/Econ620/ps/hw/hw/p1.JPEG)
+
+The LM-stat is 19.87852 and LM-critical is 9.21. Consequently, gender and age are jointly significant.
+
+
+We think maybe heteroscedasticity is an issue, so we try eye-ball test first.
+```{r}
+cleaned_data$uhat2 <- regressionpro_ll$residuals^2
+plot(cleaned_data$INDHHIN2, cleaned_data$uhat2)
+plot(cleaned_data$INDHHIN2, regressionpro_ll$residuals)
+```
+
+
+
+Yet, we can not know specific result from the tables. So we try park test with income variable.
+```{r}
+regression_he <- lm(log(uhat2) ~ log(INDHHIN2), data=cleaned_data[cleaned_data$INDHHIN2>0, ])
+summary(regression_he)
+```
+It shows that t-stat of income variable is around 13.56 and statistically significant. Therefore, it has strong evidence heteroscedasticity.
+
+
+
+# Conclusion
+In the final project, we build everything from scratch with knowledge we gain from classes. Below are things we learn: 
+
+1. Distinguish qualitative and quantitative variable.
+
+2. Use t-test or adjusted R-square to determine if the variable has explanatory power. In other words, should we include the variable.
+
+3. Determine should we use log etc. transformation in the model based on the residuals and t-test values.
+
+4. Know how to tell the variable is intercept dummy and/ or slope dummy.
+
+5. Utilize t-test, f-test, LM-test to see if the variables are statistically significant or jointly significant.
+
+6. Use eye-ball test, park test etc. to take a look if heteroscedasticity is an issue in the model.
+
+I think there is one more important thing I learn from doing this project. That is, knowing what problem we want to solve before we clean and create the data set. The reason is that when I did this project, I revised several times to build the appropriate data set back and forth since I did not think thoroughly. So, I think if I knew what questions I would tackle then I could save a lot of time to create the proper data set.
+
+
+
+
+data source:
+https://wwwn.cdc.gov/nchs/nhanes/search/DataPage.aspx?Component=Demographics&CycleBeginYear=2015
+
+reference:
+https://www.cdc.gov/nchs/products/databriefs/db303.htm
