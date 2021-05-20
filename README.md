@@ -9,5 +9,5 @@ This repository contains a portfolio of recent data science projects completed f
     + [Exchange Rate Forecast](https://github.com/chiuyuwen91/Exchange_Rate_Forecast_project/blob/master/fine_tune_corr.py) : A exchange rate predication using time series method to predict the rate between Taiwanese dollar and US dollar.    
       
 - Econometrics        
-    + [Econometric Analysis of Mental-health effect](https://github.com/chiuyuwen91/Portfolio/blob/main/Econometric%20Analysis%20of%20Mental-health%20effects.Rmd)         :A project to explore the factors which cause the depression based on multiple linear regression model in R. Trained with the data provided from [Center for Disease Control Prevention.](https://wwwn.cdc.gov/nchs/nhanes/search/DataPage.aspx?Component=Demographics&CycleBeginYear=2015) 
+    + [Econometric Analysis of Mental-health effect](https://github.com/chiuyuwen91/Portfolio/blob/main/Econometric%20Analysis%20of%20Mental-health%20effects.html)         :A project to explore the factors which cause the depression based on multiple linear regression model in R. Trained with the data provided from [Center for Disease Control Prevention.](https://wwwn.cdc.gov/nchs/nhanes/search/DataPage.aspx?Component=Demographics&CycleBeginYear=2015) 
   
