@@ -1,5 +1,5 @@
 # Portfolio of Naomi Chiu
-This repository contains a portfolio of recent data science projects completed for academic and self-learning purposes. Presented in the form of iPython notebooks and R markdown files.
+This GitHub repository showcases a diverse portfolio of recent data science projects undertaken for academic and self-learning purposes, with a particular focus on skills relevant to a data engineer job function.
 
 - [Resume](https://github.com/chiuyuwen91/Portfolio/blob/main/CV_YuWenChiu_20230701_engineer.pdf)  : If you like what you see, and would like to chat about the portfolio,      work opportunities, or collaboration, email ychiu60@gatech.edu
 
