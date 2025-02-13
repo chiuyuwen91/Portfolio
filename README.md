@@ -12,10 +12,10 @@ If you like what you see, and would like to chat about the portfolio,      work 
     + [Evaluating a Stock Price Strategy](https://github.com/chiuyuwen91/Evaluating_a_Stock_Price_Strategy/blob/main/p8_strategyEval%20_report.pdf) ：Implemented a stock price strategy utilizing technical analysis combined with reinforcement learning techniques. Leveraged advanced algorithms to analyze historical stock data and identify patterns for making informed trading decisions. Integrated reinforcement learning algorithms to continuously refine and optimize the trading strategy based on real-time market conditions. This project demonstrates a strong understanding of both technical analysis and machine learning, showcasing the ability to develop effective trading strategies that adapt and improve over time.
     + [Weather Analysis and Deployment with FastAPI](https://github.com/chiuyuwen91/weather) ：This project provides a complete pipeline for collecting, storing, analyzing, and serving weather data via a web API. It integrates PostgreSQL for data storage, Alembic for database migrations, and FastAPI for the REST API. The system supports data ingestion, analysis, and visualization, making it suitable for weather monitoring and trend analysis.
         Key Features:   
-        Data Collection: Stores weather data from multiple stations.
-        Analysis: Generates aggregated weather statistics.
-        API Deployment: Provides a REST API for accessing weather data.
-        AWS Deployment: Uses AWS RDS, ECS Fargate, and ELB for scalability.
+        Data Collection: Stores weather data from multiple stations.//
+        Analysis: Generates aggregated weather statistics.//
+        API Deployment: Provides a REST API for accessing weather data.//
+        AWS Deployment: Uses AWS RDS, ECS Fargate, and ELB for scalability.//
     + [Sentiment Analysis of Tripadvisor Reviews](https://github.com/chiuyuwen91/Portfolio/blob/main/Sentiment%20Analysis%20of%20Tripadvisor%20Reviews.ipynb) ：Developed a robust predictive sentiment analysis model in Python, utilizing natural language processing tools. The model accurately anticipates hotel ratings based on customer reviews. Additionally, conducted a comprehensive comparison with logistic regression, gradient boosting classification, and random forest classification models. The models were trained using a large dataset of text reviews collected from Tripadvisor. This project demonstrates a deep understanding of NLP techniques, model evaluation, and leveraging diverse machine learning algorithms to extract valuable insights from textual data.    
     
       
